@@ -142,6 +142,8 @@ int EmptyLineCount(char *filename){
             else     lineCount++;
         }
     }
+    if(c==EOF&&empty==0)
+        lineCount++;
     return lineCount;
 }
 
@@ -159,9 +161,13 @@ int CodeLineCount(char *filename){
             }
             if(code>=2){
                 lineCount++;
+                code=0;
                 c=fgetc(fp);
             }
-            else c=fgetc(fp);
+            else{
+                c=fgetc(fp);
+                code=0;
+            }
         }else if(c=='/'){
             c=fgetc(fp);
             if(c=='/'){
@@ -169,7 +175,8 @@ int CodeLineCount(char *filename){
                 while(c!='\n')  c=fgetc(fp);
             }else if(c=='*'){
                 c=fgetc(fp);
-                while(c!='*'&&(c=fgetc(fp)!='/')) c=fgetc(fp);
+                while(c!='/')
+                    c=fgetc(fp);
                 c=fgetc(fp);
             }
             c=fgetc(fp);
@@ -192,13 +199,14 @@ int CommentLineCount(char *filename){
                 c=fgetc(fp);
                 while(c!='\n') c=fgetc(fp);
             }else if(c=='*'){
+                lineCount++;
                 c=fgetc(fp);
-                if(c=='\n'){
-                    lineCount++;
-                    c=fgetc(fp);
-                }else if(c=='*'&&(c=fgetc(fp)!='/')){
-                    lineCount++;
-                    c=fgetc(fp);
+                while(c!='/'){
+                    if(c=='\n'){
+                        lineCount++;
+                        c=fgetc(fp);
+                    }else
+                        c=fgetc(fp);
                 }
             }
         }
