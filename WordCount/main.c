@@ -11,13 +11,13 @@ int main(){
     int ComplexCount(char *filename);
     do{
         system("cls");
-        printf("\n/**************»¶Ó­Ê¹ÓÃWordCount**************/\n\n");
-        printf("\t\tĞÅÏ¢°²È«£¨2£©°à\n");
+        printf("\n/**************æ¬¢è¿ä½¿ç”¨WordCount**************/\n\n");
+        printf("\t\tä¿¡æ¯å®‰å…¨ï¼ˆ2ï¼‰ç­\n");
         printf("\t\t3216005217\n");
-        printf("\t\tÍõÜ°çâ\n\n");
+        printf("\t\tç‹é¦¨ç®\n\n");
         printf("/*******************************************/\n\n");
-        printf("£¨¸ñÊ½Îª£ºwc.exe [parameter] [file_name]£©\n\n");
-        printf("ÇëÊäÈëÓÃ»§ÃüÁî£º");
+        printf("ï¼ˆæ ¼å¼ä¸ºï¼šwc.exe [parameter] [file_name]ï¼‰\n\n");
+        printf("è¯·è¾“å…¥ç”¨æˆ·å‘½ä»¤ï¼š");
         while((c=getchar())!='\n'){
             scanf("%s%s%s",str1,str2,str3);
         }
@@ -37,19 +37,20 @@ int main(){
                          break;
             }
         }else{
-            printf("\nÔİ²»Ö§³Ö%cÃüÁî\n",str2[1]);
+            printf("\næš‚ä¸æ”¯æŒ%cå‘½ä»¤\n",str2[1]);
         }
     }while(str2[1]=='c'||str2[1]=='w'||str2[1]=='l'||str2[1]=='a');
     getchar();
     return 0;
 }
-// ·µ»ØÎÄ¼şµÄ×Ö·ûÊı
+
+// è¿”å›æ–‡ä»¶çš„å­—ç¬¦æ•°
 int CharCount(char *filename){
     FILE * fp;
     int charCount=0;
     char a[688];
     if((fp=fopen(filename,"r"))==NULL){
-        printf("ÎŞ·¨´ò¿ªÎÄ¼ş\n");
+        printf("æ— æ³•æ‰“å¼€æ–‡ä»¶\n");
     }else{
         while(!feof(fp)){
             a[charCount]=fgetc(fp);
@@ -58,17 +59,18 @@ int CharCount(char *filename){
                 charCount++;
             }
         }
-        printf("\n¸ÃÎÄ¼şµÄ×Ö·ûÊıÎª£º%d\n\n",charCount);
+        printf("\nè¯¥æ–‡ä»¶çš„å­—ç¬¦æ•°ä¸ºï¼š%d\n\n",charCount);
     }
     return charCount;
 }
-//·µ»ØÎÄ¼şµÄµ¥´ÊÊı
+
+//è¿”å›æ–‡ä»¶çš„å•è¯æ•°
 int WordCount(char *filename){
     FILE * fp;
     int wordCount=0, word=0;
     char c;
     if((fp=fopen(filename,"r"))==NULL){
-        printf("ÎŞ·¨´ò¿ªÎÄ¼ş\n");
+        printf("æ— æ³•æ‰“å¼€æ–‡ä»¶\n");
     }else{
         c=fgetc(fp);
         while(c!=EOF){
@@ -79,18 +81,18 @@ int WordCount(char *filename){
             }
              c=fgetc(fp);
         }
-        printf("\n¸ÃÎÄ¼şµÄµ¥´ÊÊıÎª£º%d\n\n",wordCount);
+        printf("\nè¯¥æ–‡ä»¶çš„å•è¯æ•°ä¸ºï¼š%d\n\n",wordCount);
     }
     return wordCount;
 }
 
-//·µ»ØÎÄ¼şµÄĞĞÊı
+//è¿”å›æ–‡ä»¶çš„è¡Œæ•°
 int LineCount(char *filename){
     FILE * fp;
     int lineCount=0, line=0;
     char c;
     if((fp=fopen(filename,"r"))==NULL){
-        printf("ÎŞ·¨´ò¿ªÎÄ¼ş\n");
+        printf("æ— æ³•æ‰“å¼€æ–‡ä»¶\n");
     }else{
         while(!feof(fp)){
             c=fgetc(fp);
@@ -103,11 +105,12 @@ int LineCount(char *filename){
             }
         }
         if(c==EOF && line==1) lineCount++;
-        printf("\n¸ÃÎÄ¼şµÄĞĞÊıÎª£º%d\n\n",lineCount);
+        printf("\nè¯¥æ–‡ä»¶çš„è¡Œæ•°ä¸ºï¼š%d\n\n",lineCount);
     }
     return lineCount;
 }
 
+//è¿”å›æ–‡ä»¶æ›´å¤æ‚çš„æ•°æ®ï¼ˆç©ºè¡Œã€ä»£ç è¡Œã€æ³¨é‡Šè¡Œï¼‰
 int ComplexCount(char *filename){
     FILE * fp;
     int emptyLineCount, codeLineCount, commentLineCount;
@@ -115,18 +118,19 @@ int ComplexCount(char *filename){
     int CodeLineCount(char *filename);
     int CommentLineCount(char *filename);
     if((fp=fopen(filename,"r"))==NULL){
-        printf("ÎŞ·¨´ò¿ªÎÄ¼ş\n");
+        printf("æ— æ³•æ‰“å¼€æ–‡ä»¶\n");
     }else{
         emptyLineCount=EmptyLineCount(filename);
         codeLineCount=CodeLineCount(filename);
         commentLineCount=CommentLineCount(filename);
-        printf("\n¸ÃÎÄ¼şµÄ¿ÕĞĞĞĞÊıÎª£º%d\n",emptyLineCount);
-        printf("¸ÃÎÄ¼şµÄ´úÂëĞĞĞĞÊıÎª£º%d\n",codeLineCount);
-        printf("¸ÃÎÄ¼şµÄ×¢ÊÍĞĞĞĞÊıÎª£º%d\n\n",commentLineCount);
+        printf("\nè¯¥æ–‡ä»¶çš„ç©ºè¡Œè¡Œæ•°ä¸ºï¼š%d\n",emptyLineCount);
+        printf("è¯¥æ–‡ä»¶çš„ä»£ç è¡Œè¡Œæ•°ä¸ºï¼š%d\n",codeLineCount);
+        printf("è¯¥æ–‡ä»¶çš„æ³¨é‡Šè¡Œè¡Œæ•°ä¸ºï¼š%d\n\n",commentLineCount);
     }
     return 0;
 }
 
+//è¿”å›æ–‡ä»¶çš„ç©ºè¡Œè¡Œæ•°
 int EmptyLineCount(char *filename){
     FILE * fp;
     char c;
@@ -147,6 +151,7 @@ int EmptyLineCount(char *filename){
     return lineCount;
 }
 
+//è¿”å›æ–‡ä»¶çš„ä»£ç è¡Œè¡Œæ•°
 int CodeLineCount(char *filename){
     FILE * fp;
     char c;
@@ -185,6 +190,7 @@ int CodeLineCount(char *filename){
     return lineCount;
 }
 
+//è¿”å›æ–‡ä»¶çš„æ³¨é‡Šè¡Œè¡Œæ•°
 int CommentLineCount(char *filename){
     FILE * fp;
     char c;
