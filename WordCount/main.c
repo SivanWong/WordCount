@@ -12,10 +12,6 @@ int main(){
     do{
         system("cls");
         printf("\n/**************欢迎使用WordCount**************/\n\n");
-        printf("\t\t信息安全（2）班\n");
-        printf("\t\t3216005217\n");
-        printf("\t\t王馨玮\n\n");
-        printf("/*******************************************/\n\n");
         printf("（格式为：wc.exe [parameter] [file_name]）\n\n");
         printf("请输入用户命令：");
         while((c=getchar())!='\n'){
@@ -43,18 +39,18 @@ int main(){
     getchar();
     return 0;
 }
+
 // 返回文件的字符数
 int CharCount(char *filename){
     FILE * fp;
     int charCount=0;
-    char a[688];
+    char c;
     if((fp=fopen(filename,"r"))==NULL){
         printf("无法打开文件\n");
     }else{
         while(!feof(fp)){
-            a[charCount]=fgetc(fp);
-            if(isalnum(a[charCount])){
-                //putchar(a[i]);
+            c=fgetc(fp);  //读入文件中的字符
+            if(isalnum(c)){
                 charCount++;
             }
         }
@@ -62,6 +58,7 @@ int CharCount(char *filename){
     }
     return charCount;
 }
+
 //返回文件的单词数
 int WordCount(char *filename){
     FILE * fp;
@@ -72,13 +69,20 @@ int WordCount(char *filename){
     }else{
         c=fgetc(fp);
         while(c!=EOF){
-            if((!isalpha(c))&&c!='-')  word=0;
-            else if(word==0){
+            if(isalpha(c))
                 word=1;
-                wordCount++;
+            else if(c=='-'&&word==1){
+                word=1;
+            }else{
+                if(word==1){
+                    wordCount++;
+                    word=0;
+                }
             }
-             c=fgetc(fp);
+            c=fgetc(fp);
         }
+        if(c==EOF&&word==1) //为了防止文件结束符前没有除英文字符及连接符以外的字符导致没有计数
+            wordCount++;
         printf("\n该文件的单词数为：%d\n\n",wordCount);
     }
     return wordCount;
@@ -92,22 +96,25 @@ int LineCount(char *filename){
     if((fp=fopen(filename,"r"))==NULL){
         printf("无法打开文件\n");
     }else{
-        while(!feof(fp)){
-            c=fgetc(fp);
-            if(isalnum(c)||c=='{'||c=='}')  line=1;
+        c=fgetc(fp);
+        while(c!=EOF){
+            if(c!=' '&&c!='\t'&&c!='\v'&&c!='\r'&&c!='\n')  line=1;
             else if(c=='\n'){
                 if(line==1){
                     lineCount++;
                     line=0;
                 }else  line=0;
             }
+            c=fgetc(fp);
         }
-        if(c==EOF && line==1) lineCount++;
+        if(c==EOF && line==1)  //为了防止最后一行没有换行而没读到换行符导致没有计数
+            lineCount++;
         printf("\n该文件的行数为：%d\n\n",lineCount);
     }
     return lineCount;
 }
 
+//返回文件更复杂的数据（空行、代码行、注释行）
 int ComplexCount(char *filename){
     FILE * fp;
     int emptyLineCount, codeLineCount, commentLineCount;
@@ -127,47 +134,49 @@ int ComplexCount(char *filename){
     return 0;
 }
 
+//返回文件的空行行数
 int EmptyLineCount(char *filename){
     FILE * fp;
     char c;
     int empty=1, lineCount=0;
     fp=fopen(filename,"r");
-    while(!feof(fp)){
-        c=fgetc(fp);
-        if(c!=' '&&c!='t'&&c!='{'&&c!='}'&&c!='\n'){
+    c=fgetc(fp);
+    while(c!=EOF){
+        if(c!=' '&&c!='t'&&c!='\v'&&c!='\r'&&c!='\n'&&c!='{'&&c!='}'){
            empty=0;
         }
         else if(c=='\n'){
             if(empty==0) empty=1;
-            else     lineCount++;
+            else{
+                lineCount++;
+                empty==0;
+            }
         }
+        c=fgetc(fp);
     }
-    if(c==EOF&&empty==0)
+    if(c==EOF&&empty==1)  //为了防止最后一行没有换行而没读到换行符导致没有计数
         lineCount++;
     return lineCount;
 }
 
+//返回文件的代码行行数
 int CodeLineCount(char *filename){
     FILE * fp;
     char c;
-    int code=0, lineCount=0;
+    int code=0, codeline=0, lineCount=0;
     fp=fopen(filename,"r");
     c=fgetc(fp);
     while(c!=EOF){
-        if(isalnum(c)||c=='\n'){
-            while(c!='\n'){
-                code++;
-                c=fgetc(fp);
-            }
-            if(code>=2){
-                lineCount++;
+        if(isalnum(c)){
+            if(code==1){
+                codeline=1;
                 code=0;
-                c=fgetc(fp);
-            }
-            else{
-                c=fgetc(fp);
-                code=0;
-            }
+            }else
+                code=1;
+        }else if(c=='\n'&&codeline==1){
+            lineCount++;
+            code=0;
+            codeline=0;
         }else if(c=='/'){
             c=fgetc(fp);
             if(c=='/'){
@@ -179,12 +188,15 @@ int CodeLineCount(char *filename){
                     c=fgetc(fp);
                 c=fgetc(fp);
             }
-            c=fgetc(fp);
-        }else c=fgetc(fp);
+        }
+        c=fgetc(fp);
     }
+    if(c==EOF&&codeline==1)  //为了防止最后一行没有换行而没读到换行符导致没有计数
+        lineCount++;
     return lineCount;
 }
 
+//返回文件的注释行行数
 int CommentLineCount(char *filename){
     FILE * fp;
     char c;
