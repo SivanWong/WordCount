@@ -9,13 +9,14 @@ int main(){
     int WordCount(char *filename);
     int LineCount(char *filename);
     int ComplexCount(char *filename);
+    //形成一个循环
     do{
         system("cls");
         printf("\n/**************欢迎使用WordCount**************/\n\n");
         printf("（格式为：wc.exe [parameter] [file_name]）\n\n");
         printf("请输入用户命令：");
         while((c=getchar())!='\n'){
-            scanf("%s%s%s",str1,str2,str3);
+            scanf("%s%s%s",str1,str2,str3);  //分组存储输入的指令
         }
         if(str2[1]=='c'||str2[1]=='w'||str2[1]=='l'||str2[1]=='a'){
             switch(str2[1]){
@@ -40,17 +41,19 @@ int main(){
     return 0;
 }
 
+
 // 返回文件的字符数
 int CharCount(char *filename){
     FILE * fp;
     int charCount=0;
     char c;
+    //先判断文件能否打开
     if((fp=fopen(filename,"r"))==NULL){
         printf("无法打开文件\n");
     }else{
         while(!feof(fp)){
             c=fgetc(fp);  //读入文件中的字符
-            if(isalnum(c)){
+            if(isalnum(c)){   //判断字符是否为英文、数字字符
                 charCount++;
             }
         }
@@ -58,6 +61,7 @@ int CharCount(char *filename){
     }
     return charCount;
 }
+
 
 //返回文件的单词数
 int WordCount(char *filename){
@@ -69,14 +73,14 @@ int WordCount(char *filename){
     }else{
         c=fgetc(fp);
         while(c!=EOF){
-            if(isalpha(c))
-                word=1;
+            if(isalpha(c)) //判断字符是否为英文字符
+                word=1;    //标记为一个单词的开始
             else if(c=='-'&&word==1){
                 word=1;
             }else{
                 if(word==1){
                     wordCount++;
-                    word=0;
+                    word=0;  //一个单词结束，重置为0
                 }
             }
             c=fgetc(fp);
@@ -96,14 +100,16 @@ int LineCount(char *filename){
     if((fp=fopen(filename,"r"))==NULL){
         printf("无法打开文件\n");
     }else{
-        c=fgetc(fp);
+        c=fgetc(fp);   //读入文件中的字符
         while(c!=EOF){
-            if(c!=' '&&c!='\t'&&c!='\v'&&c!='\r'&&c!='\n')  line=1;
+            if(c!=' '&&c!='\t'&&c!='\v'&&c!='\r'&&c!='\n')
+                line=1;   //标记一行的开始
             else if(c=='\n'){
                 if(line==1){
                     lineCount++;
+                    line=0;  //一行结束，重置为0
+                }else
                     line=0;
-                }else  line=0;
             }
             c=fgetc(fp);
         }
@@ -142,14 +148,14 @@ int EmptyLineCount(char *filename){
     fp=fopen(filename,"r");
     c=fgetc(fp);
     while(c!=EOF){
-        if(c!=' '&&c!='t'&&c!='\v'&&c!='\r'&&c!='\n'&&c!='{'&&c!='}'){
-           empty=0;
-        }
+        if(c!=' '&&c!='t'&&c!='\v'&&c!='\r'&&c!='\n'&&c!='{'&&c!='}')
+           empty=0;     //标记这不是空行
         else if(c=='\n'){
-            if(empty==0) empty=1;
+            if(empty==0)
+                empty=1;   //重置为1
             else{
                 lineCount++;
-                empty==0;
+                empty=0;
             }
         }
         c=fgetc(fp);
@@ -168,8 +174,8 @@ int CodeLineCount(char *filename){
     c=fgetc(fp);
     while(c!=EOF){
         if(isalnum(c)){
-            if(code==1){
-                codeline=1;
+            if(code==1){  //判断是否已有一个有效字符
+                codeline=1;  //标记为代码行的开始
                 code=0;
             }else
                 code=1;
@@ -177,7 +183,7 @@ int CodeLineCount(char *filename){
             lineCount++;
             code=0;
             codeline=0;
-        }else if(c=='/'){
+        }else if(c=='/'){   //排除注释行
             c=fgetc(fp);
             if(c=='/'){
                 c=fgetc(fp);
@@ -204,13 +210,13 @@ int CommentLineCount(char *filename){
     fp=fopen(filename,"r");
     c=fgetc(fp);
     while(c!=EOF){
-        if(c=='/'){
+        if(c=='/'){  //继续判断是否为注释行
             c=fgetc(fp);
-            if(c=='/'){
+            if(c=='/'){  //单行注释
                 lineCount++;
                 c=fgetc(fp);
                 while(c!='\n') c=fgetc(fp);
-            }else if(c=='*'){
+            }else if(c=='*'){  //多行注释
                 lineCount++;
                 c=fgetc(fp);
                 while(c!='/'){
